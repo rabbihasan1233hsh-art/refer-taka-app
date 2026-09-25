@@ -13,3 +13,82 @@
     }
   ]
 }
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refer Taka</title>
+<link rel="manifest" href="manifest.json">
+<style>
+body{font-family:sans-serif;background:#f0fdf4;margin:0;padding:12px}
+.card{background:#005a41;color:white;padding:25px;border-radius:20px;text-align:center}
+.card h1{font-size:42px;margin:10px 0}
+.box{background:white;padding:16px;border-radius:15px;margin-top:14px;box-shadow:0 2px 8px rgba(0,0,0,0.08);border:1px dashed #005a41}
+.code{font-size:34px;font-weight:bold;text-align:center;color:#000}
+.btn{border:none;width:100%;padding:14px;border-radius:12px;font-size:17px;font-weight:bold;color:white;background:#005a41;margin-top:12px}
+.task{background:#e8f5e9;padding:12px;border-radius:10px;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;margin-top:10px;box-sizing:border-box}
+</style>
+</head>
+<body>
+<div class="card">
+<div>Refer Taka</div>
+<h1 id="bal">৳ 50</h1>
+<div>প্রতি রেফারে ২০ টাকা</div>
+</div>
+
+<div class="box">
+<p style="text-align:center">আপনার রেফার কোড</p>
+<div id="code" class="code">TAKA----</div>
+<button class="btn" onclick="copy()">📤 শেয়ার করুন</button>
+<p id="cmsg" style="text-align:center;color:green;font-weight:bold"></p>
+</div>
+
+<div class="box">
+<h3>💰 টাকা ইনকাম করুন</h3>
+<div class="task"><span>🎬 ভিডিও দেখুন</span><button onclick="add(10)">+১০ টাকা</button></div>
+<div class="task"><span>📢 বন্ধুকে শেয়ার</span><button onclick="add(20)">+২০ টাকা</button></div>
+<div class="task"><span>✅ ডেইলি চেক-ইন</span><button onclick="add(15)">+১৫ টাকা</button></div>
+</div>
+
+<div class="box">
+<h3>💸 বিকাশ / নগদে উইথড্র</h3>
+<p style="font-size:13px;color:gray">মিনিমাম ১০০ টাকা</p>
+<select id="method"><option>bKash</option><option>Nagad</option></select>
+<input id="num" placeholder="নাম্বার: 01XXXXXXXXX">
+<input id="amt" type="number" placeholder="পরিমান: 100">
+<button class="btn" style="background:#ff9800" onclick="wd()">উইথড্র করুন</button>
+<p id="wmsg" style="text-align:center;font-weight:bold"></p>
+</div>
+
+<script>
+let b = localStorage.getItem("bal") ? parseInt(localStorage.getItem("bal")) : 50;
+let myCode = localStorage.getItem("myCode") || "TAKA-"+Math.floor(1000+Math.random()*9000);
+localStorage.setItem("myCode",myCode);
+document.getElementById("code").innerText=myCode;
+upd();
+
+function upd(){ document.getElementById("bal").innerText="৳ "+b; localStorage.setItem("bal",b); }
+function add(t){ b+=t; upd(); alert(t+" টাকা যোগ হয়েছে!"); }
+function copy(){
+ let t="আমার কোড: "+myCode+" | লিংক: https://rabbihasan1233hsh-art.github.io/refer-taka-app/";
+ navigator.clipboard.writeText(t);
+ document.getElementById("cmsg").innerText="✅ কপি হয়ে গেছে!";
+ add(5);
+}
+function wd(){
+ let n=document.getElementById("num").value;
+ let a=parseInt(document.getElementById("amt").value);
+ let m=document.getElementById("method").value;
+ let msg=document.getElementById("wmsg");
+ if(n.length!=11){ msg.innerText="❌ ১১ ডিজিট নাম্বার দিন"; msg.style.color="red"; return; }
+ if(a<100){ msg.innerText="❌ মিনিমাম ১০০ টাকা"; msg.style.color="red"; return; }
+ if(a>b){ msg.innerText="❌ ব্যালেন্স কম আছে"; msg.style.color="red"; return; }
+ b-=a; upd();
+ msg.innerText="✅ "+m+" "+n+" এ "+a+" টাকা রিকোয়েস্ট গেছে! ২৪ ঘন্টায় পাবেন।";
+ msg.style.color="green";
+}
+</script>
+</body>
+</html>
