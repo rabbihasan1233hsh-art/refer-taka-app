@@ -91,4 +91,112 @@ function wd(){
 }
 </script>
 </body>
+</html><!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refer Taka - Ad Income</title>
+<link rel="manifest" href="manifest.json">
+<style>
+body{font-family:sans-serif;background:#f0fdf4;margin:0;padding:12px}
+.card{background:#005a41;color:white;padding:25px;border-radius:20px;text-align:center}
+.card h1{font-size:42px;margin:10px 0}
+.box{background:white;padding:16px;border-radius:15px;margin-top:14px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.code{font-size:30px;font-weight:bold;text-align:center}
+.btn{border:none;width:100%;padding:14px;border-radius:12px;font-size:17px;font-weight:bold;color:white;background:#005a41;margin-top:10px}
+#adModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:99;justify-content:center;align-items:center}
+.adBox{background:white;padding:20px;border-radius:15px;text-align:center;width:90%;max-width:350px}
+input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;margin-top:10px;box-sizing:border-box}
+</style>
+</head>
+<body>
+
+<div id="adModal">
+ <div class="adBox">
+  <h3>📢 বিজ্ঞাপন চলছে...</h3>
+  <p>বিজ্ঞাপন শেষ হলে টাকা পাবেন</p>
+  
+  <div style="background:#eee;padding:40px 10px;margin:15px 0;border-radius:10px">
+    এখানে আপনার বিজ্ঞাপন দেখাবে
+    <br><br>
+    <b id="timer" style="font-size:24px;color:red">5</b> সেকেন্ড
+  </div>
+
+  <button id="closeAd" class="btn" style="display:none;background:#ff9800" onclick="claimReward()">🎁 ১০ টাকা সংগ্রহ করুন</button>
+ </div>
+</div>
+
+<div class="card">
+<div>Refer Taka</div>
+<h1 id="bal">৳ 50</h1>
+<div>বিজ্ঞাপন দেখে ইনকাম</div>
+</div>
+
+<div class="box">
+<p style="text-align:center">আপনার রেফার কোড</p>
+<div id="code" class="code">TAKA----</div>
+<button class="btn" onclick="copyCode()">📤 শেয়ার করুন (+৫ টাকা)</button>
+</div>
+
+<div class="box">
+<h3>💰 ইনকাম করুন</h3>
+<button class="btn" onclick="showAd(10)">▶️ বিজ্ঞাপন দেখুন - ১০ টাকা পান</button>
+<button class="btn" style="background:#2e7d32" onclick="showAd(20)">▶️ বড় বিজ্ঞাপন দেখুন - ২০ টাকা পান</button>
+</div>
+
+<div class="box">
+<h3>💸 উইথড্র</h3>
+<select id="method"><option>bKash</option><option>Nagad</option></select>
+<input id="num" placeholder="01XXXXXXXXX">
+<input id="amt" type="number" placeholder="100">
+<button class="btn" style="background:#ff5722" onclick="wd()">উইথড্র রিকোয়েস্ট</button>
+<p id="wmsg" style="text-align:center;font-weight:bold"></p>
+</div>
+
+<script>
+let b = localStorage.getItem("bal") ? parseInt(localStorage.getItem("bal")) : 50;
+let myCode = localStorage.getItem("myCode") || "TAKA-"+Math.floor(1000+Math.random()*9000);
+let reward = 0;
+localStorage.setItem("myCode",myCode);
+document.getElementById("code").innerText=myCode;
+upd();
+function upd(){ document.getElementById("bal").innerText="৳ "+b; localStorage.setItem("bal",b); }
+
+function showAd(amount){
+ reward = amount;
+ document.getElementById("adModal").style.display="flex";
+ document.getElementById("closeAd").style.display="none";
+ let t=5;
+ document.getElementById("timer").innerText=t;
+ let inter = setInterval(()=>{
+  t--; document.getElementById("timer").innerText=t;
+  if(t<=0){ clearInterval(inter); document.getElementById("timer").innerText="শেষ!"; document.getElementById("closeAd").style.display="block"; }
+ },1000);
+}
+
+function claimReward(){
+ document.getElementById("adModal").style.display="none";
+ b+=reward; upd();
+ alert(reward+" টাকা যোগ হয়েছে! ব্যালেন্স: "+b);
+}
+
+function copyCode(){
+ let t="আমার কোড: "+myCode+" | https://rabbihasan1233hsh-art.github.io/refer-taka-app/";
+ navigator.clipboard.writeText(t);
+ b+=5; upd();
+ alert("কপি হয়েছে +৫ টাকা!");
+}
+function wd(){
+ let n=document.getElementById("num").value;
+ let a=parseInt(document.getElementById("amt").value);
+ let msg=document.getElementById("wmsg");
+ if(n.length!=11){ msg.innerText="❌ ১১ ডিজিট দিন"; msg.style.color="red"; return; }
+ if(a<100){ msg.innerText="❌ মিনিমাম ১০০"; msg.style.color="red"; return; }
+ if(a>b){ msg.innerText="❌ ব্যালেন্স নেই"; msg.style.color="red"; return; }
+ b-=a; upd();
+ msg.innerText="✅ রিকোয়েস্ট গেছে!"; msg.style.color="green";
+}
+</script>
+</body>
 </html>
