@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Refer Taka - টাকা ইনকাম</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{font-family:sans-serif;background:#f0faf5;margin:0;padding:16px}
+.card{background:#006A4E;color:#fff;padding:20px;border-radius:16px;text-align:center}
+.codebox{background:#e8f5e9;border:2px dashed #006A4E;padding:16px;border-radius:12px;text-align:center;margin:16px 0}
+.btn{background:#006A4E;color:#fff;border:none;padding:14px;width:100%;border-radius:10px;font-size:16px;font-weight:bold}
+input{width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;margin:8px 0;box-sizing:border-box}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>Refer Taka</h2>
+<h1 id="bal">৳ 50</h1>
+<p>প্রতি রেফারে ২০ টাকা</p>
+</div>
+<div class="codebox">
+<p>আপনার রেফার কোড</p>
+<h1 id="mycode" style="letter-spacing:2px">TAKA----</h1>
+<button class="btn" onclick="shareCode()">📤 শেয়ার করুন</button>
+</div>
+<div style="background:#fff;padding:16px;border-radius:12px">
+<h3>উইথড্র করুন (মিনিমাম ১০০ টাকা)</h3>
+<input id="bkash" placeholder="বিকাশ / নগদ নাম্বার দিন">
+<input id="refInput" placeholder="কারো রেফার কোড থাকলে দিন (ঐচ্ছিক)">
+<button class="btn" style="background:orange" onclick="withdraw()">উইথড্র রিকোয়েস্ট</button>
+<p id="msg" style="color:green;text-align:center"></p>
+</div>
+<script>
+const SUPABASE_URL = 'YOUR_URL_HERE';
+const SUPABASE_KEY = 'YOUR_ANON_KEY_HERE';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let myCode = 'TAKA' + Math.floor(1000+Math.random()*9000);
+let bal = 50;
+if(localStorage.getItem('mycode')){myCode=localStorage.getItem('mycode'); bal=parseInt(localStorage.getItem('bal')||'50');}
+document.getElementById('mycode').innerText=myCode;
+document.getElementById('bal').innerText='৳ '+bal;
+localStorage.setItem('mycode',myCode);
+
+async function shareCode(){
+  let text=`🔥 Refer Taka App ডাউনলোড করো! আমার কোড ${myCode} ব্যবহার করলে ৫০ টাকা বোনাস! https://rabbihasan.github.io/refer-taka-app/`;
+  if(navigator.share){navigator.share({text})} else {navigator.clipboard.writeText(text); alert('কপি হয়েছে: '+text)}
+}
+async function withdraw(){
+  let num=document.getElementById('bkash').value;
+  if(!num){alert('নাম্বার দিন');return}
+  if(bal<100){alert('মিনিমাম ১০০ টাকা লাগবে');return}
+  document.getElementById('msg').innerText='রিকোয়েস্ট পাঠানো হয়েছে! ২৪ ঘন্টায় পাবেন';
+  try{await sb.from('withdraws').insert({bkash_number:num, amount:bal, status:'pending', refer_code:myCode})}catch(e){}
+}
+</script>
+</body>
+</html>
